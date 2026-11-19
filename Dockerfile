@@ -1,5 +1,6 @@
 # upgrade: skip  (Python held back on purpose; bump with the requirements)
-FROM python:3.12-slim
+# python:3.12-slim multi-arch index digest, resolved 2026-11-19 with `docker buildx imagetools inspect python:3.12-slim`.
+FROM python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
 
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 \
     HF_HUB_DISABLE_TELEMETRY=1 USE_TF=0

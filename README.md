@@ -1,3 +1,27 @@
+# INSRD type scorer: pinned deployment
+
+This fork (`INSRD/laya-railway`) serves the base Laya multilingual checkpoint as a private service for INSRD's document type scorer (PLA-1365). Everything below the next heading is the upstream template README.
+
+| Pin | Value |
+| --- | --- |
+| Base image | `python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b` (multi-arch index, resolved 2026-11-19) |
+| Model | `convaiinnovations/laya` at Hugging Face revision `1c5edc17a7acd8701df6fc341c0d179f1c62c982` (`ARG LAYA_REVISION`) |
+| Library | `laya==0.4.32`; every Python dependency is version-pinned in `requirements.txt` (not hash-pinned) |
+
+**Env contract**
+
+| Variable | Value | Notes |
+| --- | --- | --- |
+| `LAYA_MODELS` | `multilingual` | Loads one checkpoint, about 1.7 GB. The default `english,multilingual` needs about 3.5 GB. |
+| `LAYA_API_KEY` | secret | Bearer token for every `/v1` call. The server refuses to start without one. `/health` needs no key. |
+| `PORT` | `8080` (default) | Listens on every interface, IPv4 and IPv6. |
+
+**Request rules learned in Phase 0.** A `choice` question without `instructions` returns 422. The multilingual checkpoint cuts text past 1,024 tokens without an error, so keep state and options short. Run `LAYA_API_KEY=... ./smoke.sh` against a running container to check the contract.
+
+**Rollback.** Revert the commit that changed the pin (`git revert <sha>`) and redeploy the previous commit. A model revision change alone is a one-line `LAYA_REVISION` revert.
+
+---
+
 # Deploy and Host Laya on Railway
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/laya?referralCode=sLjDXb&utm_medium=integration&utm_source=button&utm_campaign=laya)
